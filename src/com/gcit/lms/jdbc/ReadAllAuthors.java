@@ -3,7 +3,7 @@
  */
 package com.gcit.lms.jdbc;
 
-import java.sql.Connection;
+import java.sql.*;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -15,10 +15,16 @@ import java.sql.Statement;
 public class ReadAllAuthors {
 
 
-	private static String driver = "";
-	private static String url;
-	private static String username;
-	private static String password;
+	private static String driver = "com.mysql.jdbc.Driver";
+	// Laptop
+	private static String url = "jdbc:mysql://localhost:8080/library";
+	
+	// Desktop
+	//private static String url = "jdbc:mysql://localhost/library";
+	
+	private static String username = "jb";
+	private static String password = "ballesteros";
+	
 	
 	public static void main(String[] args) {
 		
