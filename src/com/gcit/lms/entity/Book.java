@@ -1,4 +1,4 @@
-package com.gcit.lms.jdbc;
+package com.gcit.lms.entity;
 
 public class Book {
 

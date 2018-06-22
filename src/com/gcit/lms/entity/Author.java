@@ -1,11 +1,18 @@
-package com.gcit.lms.jdbc;
+/**
+ * 
+ */
+package com.gcit.lms.entity;
 
-public class Genre {
+/**
+ * @author Jesús Peral
+ *
+ */
+public class Author {
 
 	private Integer id;
-	private  String name;
+	private String name;
 	
-	public Genre(Integer id, String name) {
+	public Author(Integer id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -25,4 +32,5 @@ public class Genre {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 }
