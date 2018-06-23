@@ -1,17 +1,27 @@
 package com.gcit.lms.entity;
 
+import java.util.List;
+
 public class Borrower {
 
 	private Integer id;
 	private String name;
 	private String address;
 	private String phone;
+	private List<Loan> loans;
 	
-	public Borrower(Integer id, String name, String address, String phone) {
-		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.phone = phone;
+	/**
+	 * @return the loans
+	 */
+	public List<Loan> getLoans() {
+		return loans;
+	}
+
+	/**
+	 * @param loans the loans to set
+	 */
+	public void setLoans(List<Loan> loans) {
+		this.loans = loans;
 	}
 
 	public Integer getId() {

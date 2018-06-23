@@ -3,6 +3,8 @@
  */
 package com.gcit.lms.entity;
 
+import java.util.List;
+
 /**
  * @author Jesús Peral
  *
@@ -11,10 +13,20 @@ public class Author {
 
 	private Integer id;
 	private String name;
+	private List<Book> books;
 	
-	public Author(Integer id, String name) {
-		this.id = id;
-		this.name = name;
+	/**
+	 * @return the authors
+	 */
+	public List<Book> getBooks() {
+		return this.books;
+	}
+
+	/**
+	 * @param authors the authors to set
+	 */
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
 	public Integer getId() {

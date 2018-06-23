@@ -6,18 +6,14 @@ import java.util.*;
 public abstract class BaseDAO<T> {
 
 
-	private String driver = "com.mysql.cj.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost/library?useSSL=false";
-	private String username = "jb";
-	private String password = "ballesteros";
+public static Connection conn = null;
 	
-	public Connection getConnection() throws ClassNotFoundException, SQLException {
-		Class.forName(driver);
-		return DriverManager.getConnection(url, username, password);
+	public BaseDAO(Connection connection){
+		this.conn = connection;
 	}
-	
+
 	public void save(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
-		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
 		int count = 1;
 		for(Object o: vals){
 			pstmt.setObject(count, o);
@@ -26,8 +22,24 @@ public abstract class BaseDAO<T> {
 		pstmt.executeUpdate();
 	}
 	
+	public Integer saveWithID(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
+		PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		int count = 1;
+		for(Object o: vals){
+			pstmt.setObject(count, o);
+			count++;
+		}
+		pstmt.executeUpdate();
+		ResultSet rs = pstmt.getGeneratedKeys();
+		while(rs.next()){
+			return rs.getInt(1);//check if this is 0 or 1.
+		}
+		
+		return null;
+	}
+	
 	public List<T> read(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
-		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
 		int count = 1;
 		for(Object o: vals){
 			pstmt.setObject(count, o);
@@ -41,7 +53,7 @@ public abstract class BaseDAO<T> {
 	public abstract List<T> extractData(ResultSet rs) throws SQLException, ClassNotFoundException;
 	
 	public List<T> readFirstLevel(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
-		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
 		int count = 1;
 		for(Object o: vals){
 			pstmt.setObject(count, o);

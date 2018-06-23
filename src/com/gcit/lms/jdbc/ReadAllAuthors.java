@@ -18,13 +18,15 @@ public class ReadAllAuthors {
 
 	private static String driver = "com.mysql.cj.jdbc.Driver";
 	// Laptop
-	private static String url = "jdbc:mysql://localhost/library?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	// private static String url = "jdbc:mysql://localhost/library?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+	// private static String username = "root";
+	// private static String password = "";
 	
 	// Desktop
-	//private static String url = "jdbc:mysql://localhost/library";
+	private static String url = "jdbc:mysql://localhost/library?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 	
 	private static String username = "root";
-	private static String password = "";
+	private static String password = "ballesteros";
 	
 	
 	public static void main(String[] args) {

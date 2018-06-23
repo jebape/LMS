@@ -1,12 +1,30 @@
 package com.gcit.lms.entity;
 
+import java.util.List;
+
 public class Publisher {
 
 	private Integer id;
 	private String name;
 	private String address;
 	private String phone;
+	private List<Book> books;
 	
+	
+	/**
+	 * @return the books
+	 */
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
 	public Publisher(Integer id, String name, String address, String phone) {
 		this.id = id;
 		this.name = name;
