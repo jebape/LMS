@@ -6,7 +6,7 @@ import java.util.*;
 public abstract class BaseDAO<T> {
 
 
-public static Connection conn = null;
+public Connection conn = null;
 	
 	public BaseDAO(Connection connection){
 		this.conn = connection;

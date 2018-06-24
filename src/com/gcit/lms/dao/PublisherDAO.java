@@ -15,30 +15,30 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 	}
 	
 	public void addPublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("insert into tbl_Publisher (PublisherName) values (?)", new Object[] { Publisher.getName() });
+		save("insert into tbl_publisher (PublisherName) values (?)", new Object[] { Publisher.getName() });
 	}
 	
 	public void editPublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("update tbl_Publisher set PublisherName = ? where PublisherId = ?",
+		save("update tbl_publisher set publisherName = ? where publisherId = ?",
 				new Object[] { Publisher.getName(), Publisher.getId() });
 	}
 	
 	public void deletePublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("delete from tbl_Publisher where PublisherId = ?", new Object[] { Publisher.getId() });
+		save("delete from tbl_publisher where PublisherId = ?", new Object[] { Publisher.getId() });
 	}
 	
 	public List<Publisher> readAllPublishers() throws ClassNotFoundException, SQLException {
-		return read("select * from tbl_Publisher", null);
+		return read("select * from tbl_publisher", null);
 	}
 	
 	public List<Publisher> readPublishersByName(String PublisherName) throws ClassNotFoundException, SQLException {
 		String searchName = "%"+PublisherName+"%";
-		return read("select * from tbl_Publisher where PublisherName like ?", new Object[]{searchName});
+		return read("select * from tbl_publisher where PublisherName like ?", new Object[]{searchName});
 	}
 	
 	public Publisher readPublisherByPK(Integer PublisherId) throws ClassNotFoundException, SQLException {
 		
-		List<Publisher> Publishers = read("select * from tbl_Publisher where PublisherId = ?", new Object[]{PublisherId});
+		List<Publisher> Publishers = read("select * from tbl_publisher where PublisherId = ?", new Object[]{PublisherId});
 		if(!Publishers.isEmpty()){
 			return Publishers.get(0);
 		}
@@ -51,9 +51,11 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		BookDAO bdao = new BookDAO(conn);
 		while (rs.next()) {
 			Publisher a = new Publisher();
-			a.setId(rs.getInt("PublisherId"));
-			a.setName(rs.getString("PublisherName"));
-			a.setBooks(bdao.readFirstLevel("select * from tbl_book where bookId IN (select bookId from tbl_book_Publishers where PublisherId = ?)" , new Object[]{a.getId()}));
+			a.setId(rs.getInt("publisherId"));
+			a.setName(rs.getString("publisherName"));
+			a.setAddress(rs.getString("publisherAddress"));
+			a.setPhone(rs.getString("publisherPhone"));
+			a.setBooks(bdao.readFirstLevel("select * from tbl_book where bookId IN (select bookId from tbl_publisher where publisherId = ?)" , new Object[]{a.getId()}));
 			Publishers.add(a);
 		}
 		return Publishers;
@@ -64,8 +66,10 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		List<Publisher> Publishers = new ArrayList<>();
 		while (rs.next()) {
 			Publisher a = new Publisher();
-			a.setId(rs.getInt("PublisherId"));
-			a.setName(rs.getString("PublisherName"));
+			a.setId(rs.getInt("publisherId"));
+			a.setName(rs.getString("publisherName"));
+			a.setAddress(rs.getString("publisherAddress"));
+			a.setPhone(rs.getString("publisherPhone"));
 			Publishers.add(a);
 		}
 		return Publishers;

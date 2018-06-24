@@ -51,9 +51,9 @@ public class GenreDAO extends BaseDAO<Genre> {
 		BookDAO bdao = new BookDAO(conn);
 		while (rs.next()) {
 			Genre a = new Genre();
-			a.setId(rs.getInt("Genre_Id"));
-			a.setName(rs.getString("Genre_Name"));
-			a.setBooks(bdao.readFirstLevel("select * from tbl_genre where bookId IN (select bookId from tbl_book_Genres where GenreId = ?)" , new Object[]{a.getId()}));
+			a.setId(rs.getInt("genre_Id"));
+			a.setName(rs.getString("genre_Name"));
+			a.setBooks(bdao.readFirstLevel("select * from tbl_genre where bookId IN (select bookId from tbl_book_genres where genreId = ?)" , new Object[]{a.getId()}));
 			Genres.add(a);
 		}
 		return Genres;

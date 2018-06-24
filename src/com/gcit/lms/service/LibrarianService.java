@@ -17,8 +17,9 @@ public class LibrarianService {
 
 	public List<Branch> getAllBranches() throws SQLException, ClassNotFoundException {
 		
-		Connection conn = cUtil.getConnection();
+		Connection conn = null;
 		try {
+			conn = cUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
 			return bdao.readAllBranches();
 
@@ -26,6 +27,77 @@ public class LibrarianService {
 			e.printStackTrace();
 		} finally {
 			if (conn != null) {
+				conn.close();
+			}
+		}
+		return null;
+	}
+	
+	public Integer getNumberCopiesFrom(Integer bookId, Integer branchId) throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+		try {
+			conn = cUtil.getConnection();
+			CopyDAO bdao = new CopyDAO(conn);
+			return bdao.getNumberCopies(bookId, branchId);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+		return 0;
+	}
+	
+	public void updateNoOfCopies(Integer bookId, Integer branchId, Integer numbercopies) throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+		try {
+			conn = cUtil.getConnection();
+			CopyDAO bdao = new CopyDAO(conn);
+			bdao.updateNoOfCopies(bookId, branchId, numbercopies);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+	}
+	
+	public void updateBranchByID(Integer id, String name, String address) throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+		try {
+			conn = cUtil.getConnection();
+			BranchDAO bdao = new BranchDAO(conn);
+			Branch newBranch = bdao.readBranchByPK(id);
+			if(!"N/A".equalsIgnoreCase(name))		newBranch.setName(name);
+			else	newBranch.setName(newBranch.getName());
+			if(!"N/A".equalsIgnoreCase(address))	newBranch.setAddress(address);
+			else	newBranch.setAddress(newBranch.getAddress());
+
+			bdao.updateBranch(newBranch);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+	}
+	
+	public List<Book> getAllBooksFromBranch(Integer branchId) throws SQLException{
+		Connection conn = null;
+		try {
+			conn = cUtil.getConnection();
+			BranchDAO lbdao = new BranchDAO(conn);
+			return lbdao.getAllBooksFromBranch(branchId);
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		} finally{
+			if(conn!=null){
 				conn.close();
 			}
 		}

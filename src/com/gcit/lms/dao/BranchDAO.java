@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Branch;
 
 public class BranchDAO extends BaseDAO<Branch>{
@@ -14,18 +15,20 @@ public class BranchDAO extends BaseDAO<Branch>{
 		super(conn);
 	}
 	
-	public void addBranch(Branch Branch) throws ClassNotFoundException, SQLException {
-		save("insert into tbl_Branch (BranchName) values (?)", new Object[] { Branch.getName() });
+	public void addBranch(Branch branch) throws ClassNotFoundException, SQLException{
+		save("insert into tbl_library_branch (branchName, branchAddress) values (?,?)",
+				new Object[] {branch.getName(),branch.getAddress()});
 	}
 	
-	public void editBranch(Branch Branch) throws ClassNotFoundException, SQLException {
-		save("update tbl_Branch set BranchName = ? where BranchId = ?",
-				new Object[] { Branch.getName(), Branch.getId() });
+	public void updateBranch(Branch branch) throws ClassNotFoundException, SQLException{
+		save("update tbl_library_branch set branchName = ?, branchAddress = ? where branchId = ?",
+				new Object[]{branch.getName(), branch.getAddress(), branch.getId()});
 	}
 	
-	public void deleteBranch(Branch Branch) throws ClassNotFoundException, SQLException {
-		save("delete from tbl_Branch where BranchId = ?", new Object[] { Branch.getId() });
+	public void deleteBranch(Branch branch) throws ClassNotFoundException, SQLException{
+		save("delete from tbl_library_branch where branchId = ?", new Object[] {branch.getId()});
 	}
+
 	
 	public List<Branch> readAllBranches() throws ClassNotFoundException, SQLException {
 		return read("select * from tbl_library_branch", null);
@@ -35,10 +38,16 @@ public class BranchDAO extends BaseDAO<Branch>{
 		String searchName = "%"+BranchName+"%";
 		return read("select * from tbl_Branch where BranchName like ?", new Object[]{searchName});
 	}
+	public List<Book> getAllBooksFromBranch(Integer  branchId) throws ClassNotFoundException, SQLException{
+		BookDAO bdao = new BookDAO(conn);
+		return bdao.read("select * from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ?)", new Object[]{branchId});
+	}
 	
 	public Branch readBranchByPK(Integer BranchId) throws ClassNotFoundException, SQLException {
-		
-		List<Branch> Branchs = read("select * from tbl_Branch where BranchId = ?", new Object[]{BranchId});
+//		select distinct b.bookId, b.title, b.pubId, bc.noOfCopies from tbl_book b inner join tbl_book_copies bc on bc.bookId = b.bookId
+//		where b.bookId like ? and b.title like ? and b.pubId like ? and b.bookId in 
+//		(select bookId from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ?));
+		List<Branch> Branchs = read("select * from tbl_library_branch where BranchId = ?", new Object[]{BranchId});
 		if(!Branchs.isEmpty()){
 			return Branchs.get(0);
 		}
@@ -48,15 +57,16 @@ public class BranchDAO extends BaseDAO<Branch>{
 	@Override
 	public List<Branch> extractData(ResultSet rs) throws SQLException, ClassNotFoundException {
 		List<Branch> Branchs = new ArrayList<>();
-		BookDAO bdao = new BookDAO(conn);
 		LoanDAO ldao = new LoanDAO(conn);
+		CopyDAO cdao = new CopyDAO(conn);
 		while (rs.next()) {
-			Branch a = new Branch();
-			a.setId(rs.getInt("BranchId"));
-			a.setName(rs.getString("BranchName"));
-			a.setAddress(rs.getString("branchAddress"));
-			a.setLoans(ldao.readFirstLevel("select * from tbl_book_loans where bookId IN (select bookId from tbl_library_branch where BranchId = ?)" , new Object[]{a.getId()}));
-			Branchs.add(a);
+			Branch b = new Branch();
+			b.setId(rs.getInt("branchId"));
+			b.setName(rs.getString("branchName"));
+			b.setAddress(rs.getString("branchAddress"));
+			b.setLoans(ldao.readFirstLevel("select * from tbl_book_loans where bookId IN (select bookId from tbl_library_branch where BranchId = ?)" , new Object[]{b.getId()}));
+			b.setCopies(cdao.readFirstLevel("select * from tbl_book_copies where bookId IN (select bookId from tbl_library_branch where BranchId = ?)" , new Object[]{b.getId()}));
+			Branchs.add(b);
 		}
 		return Branchs;
 	}
