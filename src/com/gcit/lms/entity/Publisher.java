@@ -25,12 +25,6 @@ public class Publisher {
 		this.books = books;
 	}
 
-	public Publisher(Integer id, String name, String address, String phone) {
-		this.id = id;
-		this.name = name;
-		this. address = address;
-		this.phone = phone;
-	}
 
 	public Integer getId() {
 		return id;

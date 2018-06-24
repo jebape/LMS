@@ -11,7 +11,6 @@ import com.gcit.lms.entity.Book;
 public class BookDAO extends BaseDAO<Book>{
 	public BookDAO(Connection connection) {
 		super(connection);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void addBook(Book book) throws ClassNotFoundException, SQLException {
@@ -60,12 +59,15 @@ public class BookDAO extends BaseDAO<Book>{
 	public List<Book> extractData(ResultSet rs) throws SQLException, ClassNotFoundException {
 		List<Book> books = new ArrayList<>();
 		AuthorDAO adao = new AuthorDAO(conn);
+		GenreDAO gdao = new GenreDAO(conn);
+		PublisherDAO pdao = new PublisherDAO(conn);
 		while (rs.next()) {
 			Book b = new Book();
 			b.setId(rs.getInt("bookId"));
 			b.setTitle(rs.getString("title"));
 			b.setAuthors(adao.readFirstLevel("select * from tbl_author where authorId IN (select authorId from tbl_book_authors where bookId = ?)", new Object[]{b.getId()}));
-			//TODO - populate Genres & Publisher
+			b.setGenres(gdao.readFirstLevel("select * from tbl_genres where genresId IN (select genre_id from tbl_genre where bookId = ?)", new Object[]{b.getId()}));
+			b.setPublisher(pdao.readFirstLevel("select 1 from tbl_publisher where publisherId IN (select publisherId from tbl_publisher where bookId = ?)", new Object[]{b.getId()}).get(0));
 			books.add(b);
 		}
 		return books;

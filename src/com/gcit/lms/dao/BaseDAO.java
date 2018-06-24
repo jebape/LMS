@@ -40,12 +40,13 @@ public static Connection conn = null;
 	
 	public List<T> read(String sql, Object[] vals) throws ClassNotFoundException, SQLException{
 		PreparedStatement pstmt = conn.prepareStatement(sql);
-		int count = 1;
-		for(Object o: vals){
-			pstmt.setObject(count, o);
-			count++;
+		if(vals != null) {
+			int count = 1;
+			for(Object o: vals){
+				pstmt.setObject(count, o);
+				count++;
+			}
 		}
-		
 		ResultSet rs = pstmt.executeQuery();
 		return extractData(rs);
 	}

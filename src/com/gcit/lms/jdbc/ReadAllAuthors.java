@@ -45,7 +45,7 @@ public class ReadAllAuthors {
 			System.out.println("Statement");
 
 			//4. Query and Execution.
-			String query = "select * from tbl_author";
+			String query = "select AuthorId, AuthorName from tbl_author";
 			System.out.println("Query");
 
 			ResultSet rs = stmt.executeQuery(query);
