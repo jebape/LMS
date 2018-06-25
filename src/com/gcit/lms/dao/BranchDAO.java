@@ -8,7 +8,10 @@ import java.util.List;
 
 import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Branch;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class BranchDAO extends BaseDAO<Branch>{
 	
 	public BranchDAO(Connection conn) {

@@ -11,7 +11,10 @@ import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Borrower;
 import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.Loan;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class LoanDAO extends BaseDAO<Loan> {
 	
 	public LoanDAO(Connection con) {

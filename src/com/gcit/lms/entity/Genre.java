@@ -1,7 +1,10 @@
 package com.gcit.lms.entity;
 
 import java.util.List;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class Genre {
 
 	private Integer id;

@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.gcit.lms.entity;
 
 import java.util.List;

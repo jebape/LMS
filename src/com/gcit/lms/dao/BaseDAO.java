@@ -2,7 +2,10 @@ package com.gcit.lms.dao;
 
 import java.sql.*;
 import java.util.*;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public abstract class BaseDAO<T> {
 
 

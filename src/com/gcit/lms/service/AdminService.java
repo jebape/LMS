@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 package com.gcit.lms.service;
 
 import java.util.List;

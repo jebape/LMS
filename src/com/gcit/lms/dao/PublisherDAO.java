@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gcit.lms.entity.Publisher;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class PublisherDAO extends BaseDAO<Publisher>{
 	
 	public PublisherDAO(Connection conn) {

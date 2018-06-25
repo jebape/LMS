@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gcit.lms.entity.Author;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class AuthorDAO extends BaseDAO<Author> {
 	
 	public AuthorDAO(Connection con) {

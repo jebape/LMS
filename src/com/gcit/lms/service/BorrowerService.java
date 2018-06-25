@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.gcit.lms.service;
 
 import java.sql.Connection;

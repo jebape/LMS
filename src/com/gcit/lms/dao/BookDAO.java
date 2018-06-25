@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gcit.lms.entity.Book;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class BookDAO extends BaseDAO<Book>{
 	public BookDAO(Connection connection) {
 		super(connection);

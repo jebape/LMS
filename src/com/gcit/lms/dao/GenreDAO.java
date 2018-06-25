@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.gcit.lms.entity.Genre;
-
+/**
+ * @author Jesús Peral
+ *
+ */
 public class GenreDAO extends BaseDAO<Genre> {
 	
 	public GenreDAO(Connection con) {
