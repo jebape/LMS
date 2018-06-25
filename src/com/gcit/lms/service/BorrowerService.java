@@ -18,6 +18,7 @@ import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Borrower;
 import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.Genre;
+import com.gcit.lms.entity.Loan;
 
 /**
  * @author Jesús Peral
@@ -25,65 +26,18 @@ import com.gcit.lms.entity.Genre;
  */
 public class BorrowerService {
 	
-	public ConnectionUtil cUtil = new ConnectionUtil();
+	public ConnectionUtil connUtil = new ConnectionUtil();
+
 	
-	public void saveAuthor(Author author) throws SQLException {
-		Connection conn = null;
-		try {
-			conn = cUtil.getConnection();
-			AuthorDAO adao = new AuthorDAO(conn);
-			if(author.getId() != null && author.getName() != null) {
-				adao.editAuthor(author);
-			}else if(author.getId() != null) {
-				adao.deleteAuthor(author);
-			}else {
-				adao.addAuthor(author);
-			}
-			conn.commit();
-			System.out.println("Author added successfully");
-		}catch(ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			if(conn != null) {
-				conn.rollback();
-			}
-		}finally {
-			conn.close();
-		}
-	}
-	
-	public void saveBook(Book book) throws SQLException{
-		Connection conn = null;
-		try {
-			conn = cUtil.getConnection();
-			BookDAO bdao = new BookDAO(conn);
-			Integer bookId = bdao.addBookWithID(book);
-			for(Author a: book.getAuthors()){
-				bdao.addBookAuthors(a.getId(), bookId);
-			}
-			for(Genre g: book.getGenres()){
-				bdao.addBookGenres(g.getId(), bookId);
-			}
-			//TODO Rest of the entities.
-			conn.commit();
-			System.out.println("Book added sucessfully");
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-			if(conn!=null){
-				conn.rollback();
-			}
-		} finally{
-			conn.close();
-		}
-		
-	}
 	
 	public Borrower getBorrower(String cardNo) throws SQLException {
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			BorrowerDAO bdao = new BorrowerDAO(conn);
-			return bdao.readBorrowerByID(Integer.parseInt(cardNo));
-			
+			Borrower borrower = bdao.readBorrowerByID(Integer.parseInt(cardNo));
+			conn.commit();
+			return borrower;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 			if(conn!=null){
@@ -99,10 +53,11 @@ public class BorrowerService {
 		
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
-			return bdao.readAllBranches();
-
+			List<Branch> branches =  bdao.readAllBranches();
+			conn.commit();
+			return branches;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
@@ -118,9 +73,11 @@ public class BorrowerService {
 	public List<Book> getAllBooksFromBranch(Integer branchId) throws SQLException{
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
-			BranchDAO lbdao = new BranchDAO(conn);
-			return lbdao.getExistingBooksFromBranch(branchId);
+			conn = connUtil.getConnection();
+			BookDAO bdao = new BookDAO(conn);
+			List<Book> books = bdao.getExistingBooksFromBranch(branchId);
+			conn.commit();
+			return books;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		} finally{
@@ -130,13 +87,47 @@ public class BorrowerService {
 		}
 		return null;
 	}
-	
+	public List<Book> getAllLoansFromUser(String cardNo) throws NumberFormatException, ClassNotFoundException, SQLException{
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			BookDAO bdao = new BookDAO(conn);
+			List<Book> books = bdao.getBooksFrom(Integer.parseInt(cardNo));
+			conn.commit();
+			return books;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+		return null;
+	}
 	public void checkOutBook(Book selectedBook, Branch branchId, String cardNo) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			LoanDAO ldao = new LoanDAO(conn);
 			ldao.checkOutBook(selectedBook, branchId, Integer.parseInt(cardNo));
+			conn.commit();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
+	}
+
+	public void checkInBook(Book selectedBook, String cardNo) throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+		try {
+			conn = connUtil.getConnection();
+			LoanDAO ldao = new LoanDAO(conn);
+			ldao.checkInBook(selectedBook, Integer.parseInt(cardNo));
+			conn.commit();
 
 		} catch (SQLException e) {
 			e.printStackTrace();

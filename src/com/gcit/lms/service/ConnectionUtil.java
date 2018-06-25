@@ -49,7 +49,7 @@ public class ConnectionUtil {
 		Class.forName(driver);
 
 		Connection conn = DriverManager.getConnection(url, username, password);
-		//conn.setAutoCommit(Boolean.FALSE);
+		conn.setAutoCommit(Boolean.FALSE);
 		
 		return conn;
 	}

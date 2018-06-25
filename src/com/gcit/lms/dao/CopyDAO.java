@@ -47,7 +47,7 @@ public class CopyDAO extends BaseDAO<Copy>{
 		while (rs.next()) {
 			Copy c = new Copy();
 			c.setNoOfCopies(rs.getInt("noOfCopies"));
-			c.setBook(bdao.readBookByPK(rs.getInt("bookId")));
+			c.setBook(bdao.readBookById(rs.getInt("bookId")));
 			c.setBranch(brdao.readBranchByPK(rs.getInt("branchId")));
 			copies.add(c);
 		}

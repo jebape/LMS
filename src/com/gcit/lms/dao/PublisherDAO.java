@@ -14,31 +14,31 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		super(conn);
 	}
 	
-	public void addPublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("insert into tbl_publisher (PublisherName) values (?)", new Object[] { Publisher.getName() });
+	public void addPublisher(Publisher publisher) throws ClassNotFoundException, SQLException {
+		save("insert into tbl_publisher (publisherName, publisherAddress, publisherPhone) values (?,?,?)", new Object[] { publisher.getName(), publisher.getAddress(),publisher.getPhone() });
 	}
 	
-	public void editPublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("update tbl_publisher set publisherName = ? where publisherId = ?",
-				new Object[] { Publisher.getName(), Publisher.getId() });
+	public void editPublisher(Publisher publisher) throws ClassNotFoundException, SQLException {
+		save("update tbl_publisher set publisherName = ?, publisherAddress = ?, publisherPhone = ? where publisherId = ?",
+				new Object[] { publisher.getName(), publisher.getAddress(),publisher.getPhone(), publisher.getId() });
 	}
 	
-	public void deletePublisher(Publisher Publisher) throws ClassNotFoundException, SQLException {
-		save("delete from tbl_publisher where PublisherId = ?", new Object[] { Publisher.getId() });
+	public void deletePublisher(Publisher publisher) throws ClassNotFoundException, SQLException {
+		save("delete from tbl_publisher where publisherId = ?", new Object[] { publisher.getId() });
 	}
 	
 	public List<Publisher> readAllPublishers() throws ClassNotFoundException, SQLException {
 		return read("select * from tbl_publisher", null);
 	}
 	
-	public List<Publisher> readPublishersByName(String PublisherName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+PublisherName+"%";
-		return read("select * from tbl_publisher where PublisherName like ?", new Object[]{searchName});
+	public List<Publisher> readPublishersByName(String publisherName) throws ClassNotFoundException, SQLException {
+		String searchName = "%"+publisherName+"%";
+		return read("select * from tbl_publisher where publisherName like ?", new Object[]{searchName});
 	}
 	
-	public Publisher readPublisherByPK(Integer PublisherId) throws ClassNotFoundException, SQLException {
+	public Publisher readPublisherByPK(Integer publisherId) throws ClassNotFoundException, SQLException {
 		
-		List<Publisher> Publishers = read("select * from tbl_publisher where PublisherId = ?", new Object[]{PublisherId});
+		List<Publisher> Publishers = read("select * from tbl_publisher where publisherId = ?", new Object[]{publisherId});
 		if(!Publishers.isEmpty()){
 			return Publishers.get(0);
 		}

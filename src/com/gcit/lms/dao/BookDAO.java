@@ -21,8 +21,12 @@ public class BookDAO extends BaseDAO<Book>{
 		save("insert into tbl_book_authors values (?, ?)", new Object[] { bookId, authorId});
 	}
 	
-	public void addBookGenres(Integer genreId, Integer bookId) throws ClassNotFoundException, SQLException {
-		//TODO - ?
+	public void addBookGenres(Integer bookId, Integer genreId) throws ClassNotFoundException, SQLException{
+		save("insert into tbl_book_genres values (?, ?)", new Object[] {genreId, bookId});
+	}
+	
+	public void addBookPublisher(Integer bookId, Integer pubId) throws ClassNotFoundException, SQLException{
+		save("update tbl_book set pubId = ? where bookId = ?", new Object[] {pubId, bookId});
 	}
 	
 	public Integer addBookWithID(Book book) throws ClassNotFoundException, SQLException {
@@ -30,7 +34,7 @@ public class BookDAO extends BaseDAO<Book>{
 	}
 
 	public void editBook(Book book) throws ClassNotFoundException, SQLException {
-		save("update tbl_book set bookName = ? where bookId = ?",
+		save("update tbl_book set title = ? where bookId = ?",
 				new Object[] { book.getTitle(), book.getId() });
 	}
 
@@ -47,7 +51,11 @@ public class BookDAO extends BaseDAO<Book>{
 		return read("select * from tbl_book where title like ?", new Object[]{searchName});
 	}
 	
-	public Book readBookByPK(Integer bookId) throws ClassNotFoundException, SQLException {
+	public List<Book> getBooksFrom(Integer cardNo) throws ClassNotFoundException, SQLException {
+		return read("select * from tbl_book where bookId in (select bookId from tbl_book_loans where cardNo = ?)", new Object[]{cardNo});
+	}
+	
+	public Book readBookById(Integer bookId) throws ClassNotFoundException, SQLException {
 		
 		List<Book> books = read("select * from tbl_book where bookId = ?", new Object[]{bookId});
 		if(!books.isEmpty()){
@@ -82,5 +90,9 @@ public class BookDAO extends BaseDAO<Book>{
 			books.add(b);
 		}
 		return books;
+	}
+
+	public List<Book> getExistingBooksFromBranch(Integer branchId) throws ClassNotFoundException, SQLException {
+		return read("select * from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ? and noOfCopies > 0)", new Object[]{branchId});
 	}
 }

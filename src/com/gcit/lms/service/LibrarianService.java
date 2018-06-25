@@ -12,17 +12,22 @@ import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Copy;
 import com.gcit.lms.entity.Branch;
 
+/**
+ * @author Jesús Peral
+ *
+ */
 public class LibrarianService {
-	ConnectionUtil cUtil = new ConnectionUtil();
+	ConnectionUtil connUtil = new ConnectionUtil();
 
 	public List<Branch> getAllBranches() throws SQLException, ClassNotFoundException {
 		
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
-			return bdao.readAllBranches();
-
+			List<Branch> branches = bdao.readAllBranches();
+			conn.commit();
+			return branches;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -36,10 +41,11 @@ public class LibrarianService {
 	public Integer getNumberCopiesFrom(Integer bookId, Integer branchId) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			CopyDAO bdao = new CopyDAO(conn);
-			return bdao.getNumberCopies(bookId, branchId);
-
+			Integer nCopies = bdao.getNumberCopies(bookId, branchId);
+			conn.commit();
+			return nCopies;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -53,9 +59,10 @@ public class LibrarianService {
 	public void updateNoOfCopies(Integer bookId, Integer branchId, Integer numbercopies) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			CopyDAO bdao = new CopyDAO(conn);
 			bdao.updateNoOfCopies(bookId, branchId, numbercopies);
+			conn.commit();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -69,7 +76,7 @@ public class LibrarianService {
 	public void updateBranchByID(Integer id, String name, String address) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
 			Branch newBranch = bdao.readBranchByPK(id);
 			if(!"N/A".equalsIgnoreCase(name))		newBranch.setName(name);
@@ -78,6 +85,7 @@ public class LibrarianService {
 			else	newBranch.setAddress(newBranch.getAddress());
 
 			bdao.updateBranch(newBranch);
+			conn.commit();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,9 +99,11 @@ public class LibrarianService {
 	public List<Book> getAllBooksFromBranch(Integer branchId) throws SQLException{
 		Connection conn = null;
 		try {
-			conn = cUtil.getConnection();
+			conn = connUtil.getConnection();
 			BranchDAO lbdao = new BranchDAO(conn);
-			return lbdao.getAllBooksFromBranch(branchId);
+			List<Book> books = lbdao.getAllBooksFromBranch(branchId);	
+			conn.commit();
+			return books;
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		} finally{
