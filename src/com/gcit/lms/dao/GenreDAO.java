@@ -31,19 +31,6 @@ public class GenreDAO extends BaseDAO<Genre> {
 		return read("select * from tbl_Genre", null);
 	}
 	
-	public List<Genre> readGenresByName(String GenreName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+GenreName+"%";
-		return read("select * from tbl_Genre where Genre_name like ?", new Object[]{searchName});
-	}
-	
-	public Genre readGenreByPK(Integer GenreId) throws ClassNotFoundException, SQLException {
-		
-		List<Genre> Genres = read("select * from tbl_Genre where Genre_id = ?", new Object[]{GenreId});
-		if(!Genres.isEmpty()){
-			return Genres.get(0);
-		}
-		return null;
-	}
 	
 	@Override
 	public List<Genre> extractData(ResultSet rs) throws SQLException, ClassNotFoundException {

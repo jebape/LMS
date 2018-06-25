@@ -22,10 +22,6 @@ public class LoanDAO extends BaseDAO<Loan> {
 		return read("select * from tbl_book_loan", null);
 	}
 	
-	public List<Loan> readLoansByName(String LoanName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+LoanName+"%";
-		return read("select * from tbl_book_loan where LoanName like ?", new Object[]{searchName});
-	}
 	
 	public void updateDueDate(Book book, Branch branch, Borrower borrower, LocalDate date) throws ClassNotFoundException, SQLException {
 		save("update tbl_book_loans set dueDate = ? where bookId = ? and branchId = ? and cardNo = ?", new Object[] {date.toString(), book.getId(), branch.getId(), borrower.getId()});
@@ -43,14 +39,6 @@ public class LoanDAO extends BaseDAO<Loan> {
 						LocalDate.now().plusDays(7), null });
 	}
 
-	public Loan readLoanByPK(Integer loanId) throws ClassNotFoundException, SQLException {
-		
-		List<Loan> loans = read("select * from tbl_book_loan where LoanId = ?", new Object[]{loanId});
-		if(!loans.isEmpty()){
-			return loans.get(0);
-		}
-		return null;
-	}
 	
 	@Override
 	public List<Loan> extractData(ResultSet rs) throws SQLException, ClassNotFoundException {
@@ -65,7 +53,7 @@ public class LoanDAO extends BaseDAO<Loan> {
 			lo.setDueDate(rs.getString("dueDate"));
 			lo.setDateIn(rs.getString("dateIn"));
 			lo.setBook(bdao.readBookById(rs.getInt("bookId")));
-			lo.setBranch(brdao.readBranchByPK(rs.getInt("branchId")));
+			lo.setBranch(brdao.readBranchById(rs.getInt("branchId")));
 			lo.setBorrower(bodao.readBorrowerByID(rs.getInt("cardNo")));
 
 			loans.add(lo);

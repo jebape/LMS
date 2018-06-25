@@ -31,12 +31,8 @@ public class PublisherDAO extends BaseDAO<Publisher>{
 		return read("select * from tbl_publisher", null);
 	}
 	
-	public List<Publisher> readPublishersByName(String publisherName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+publisherName+"%";
-		return read("select * from tbl_publisher where publisherName like ?", new Object[]{searchName});
-	}
 	
-	public Publisher readPublisherByPK(Integer publisherId) throws ClassNotFoundException, SQLException {
+	public Publisher readPublisherById(Integer publisherId) throws ClassNotFoundException, SQLException {
 		
 		List<Publisher> Publishers = read("select * from tbl_publisher where publisherId = ?", new Object[]{publisherId});
 		if(!Publishers.isEmpty()){

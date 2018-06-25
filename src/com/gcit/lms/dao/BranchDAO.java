@@ -34,10 +34,7 @@ public class BranchDAO extends BaseDAO<Branch>{
 		return read("select * from tbl_library_branch", null);
 	}
 	
-	public List<Branch> readBranchesByName(String BranchName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+BranchName+"%";
-		return read("select * from tbl_Branch where BranchName like ?", new Object[]{searchName});
-	}
+	
 	
 	
 	public List<Book> getAllBooksFromBranch(Integer  branchId) throws ClassNotFoundException, SQLException{
@@ -45,10 +42,7 @@ public class BranchDAO extends BaseDAO<Branch>{
 		return bdao.read("select * from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ?)", new Object[]{branchId});
 	}
 	
-	public Branch readBranchByPK(Integer BranchId) throws ClassNotFoundException, SQLException {
-//		select distinct b.bookId, b.title, b.pubId, bc.noOfCopies from tbl_book b inner join tbl_book_copies bc on bc.bookId = b.bookId
-//		where b.bookId like ? and b.title like ? and b.pubId like ? and b.bookId in 
-//		(select bookId from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ?));
+	public Branch readBranchById(Integer BranchId) throws ClassNotFoundException, SQLException {
 		List<Branch> Branchs = read("select * from tbl_library_branch where BranchId = ?", new Object[]{BranchId});
 		if(!Branchs.isEmpty()){
 			return Branchs.get(0);

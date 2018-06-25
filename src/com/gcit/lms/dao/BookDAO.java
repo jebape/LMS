@@ -46,10 +46,6 @@ public class BookDAO extends BaseDAO<Book>{
 		return read("select * from tbl_book", null);
 	}
 	
-	public List<Book> readBooksByName(String bookName) throws ClassNotFoundException, SQLException {
-		String searchName = "%"+bookName+"%";
-		return read("select * from tbl_book where title like ?", new Object[]{searchName});
-	}
 	
 	public List<Book> getBooksFrom(Integer cardNo) throws ClassNotFoundException, SQLException {
 		return read("select * from tbl_book where bookId in (select bookId from tbl_book_loans where cardNo = ?)", new Object[]{cardNo});
@@ -73,7 +69,7 @@ public class BookDAO extends BaseDAO<Book>{
 			Book b = new Book();
 			b.setId(rs.getInt("bookId"));
 			b.setTitle(rs.getString("title"));
-			b.setPublisher(pdao.readPublisherByPK(rs.getInt("pubId")));
+			b.setPublisher(pdao.readPublisherById(rs.getInt("pubId")));
 			b.setAuthors(adao.readFirstLevel("select * from tbl_author where authorId IN (select authorId from tbl_book_authors where bookId = ?)", new Object[]{b.getId()}));
 			b.setGenres(gdao.readFirstLevel("select * from tbl_genre where genre_Id IN (select genre_Id from tbl_book_genres where bookId = ?)", new Object[]{b.getId()}));
 			books.add(b);

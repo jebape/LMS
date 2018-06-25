@@ -78,7 +78,7 @@ public class LibrarianService {
 		try {
 			conn = connUtil.getConnection();
 			BranchDAO bdao = new BranchDAO(conn);
-			Branch newBranch = bdao.readBranchByPK(id);
+			Branch newBranch = bdao.readBranchById(id);
 			if(!"N/A".equalsIgnoreCase(name))		newBranch.setName(name);
 			else	newBranch.setName(newBranch.getName());
 			if(!"N/A".equalsIgnoreCase(address))	newBranch.setAddress(address);
