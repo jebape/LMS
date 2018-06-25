@@ -62,7 +62,7 @@ public class MenuUI {
 	private static void borrower() {
 		
 		Boolean valid = false;
-		String cardNo;
+		String cardNo = null;
 		BorrowerService bs = new BorrowerService();
 		Borrower user = null;
 		System.out.print("Enter your Card Number: ");
@@ -100,8 +100,33 @@ public class MenuUI {
 			if(selection.equals(Integer.toString(i))){
 				return;
 			}else {
-				Integer branchId = branches.get(Integer.parseInt(selection)-1).getId();
-				bs.
+				Branch branchId = branches.get(Integer.parseInt(selection)-1);
+				try {
+					List<Book> books = bs.getAllBooksFromBranch(branchId.getId());
+					if (!books.isEmpty() && books != null) {
+						for (i = 1; i <= books.size(); i++) {
+							System.out.print((i) + ") ");
+							System.out.println(books.get(i - 1).getTitle()+" by "+books.get(i - 1).getAuthors().get(0).getName());
+						}
+						System.out.println(i + ") Quit to cancel operation");
+						selection = consoleInput.nextLine();
+						if (selection.equals(Integer.toString(i))) {
+							break;
+						} else {
+							Book selectedBook = books.get(Integer.parseInt(selection)-1);
+							bs.checkOutBook(selectedBook, branchId, cardNo);
+							
+						}
+					}
+					else {
+						System.out.println("There are not available copies for this branch");
+						break;
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 			}
 			break;
 		case "2":

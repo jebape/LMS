@@ -38,6 +38,12 @@ public class BranchDAO extends BaseDAO<Branch>{
 		String searchName = "%"+BranchName+"%";
 		return read("select * from tbl_Branch where BranchName like ?", new Object[]{searchName});
 	}
+	
+	public List<Book> getExistingBooksFromBranch(Integer  branchId) throws ClassNotFoundException, SQLException{
+		BookDAO bdao = new BookDAO(conn);
+		return bdao.read("select * from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ? and noOfCopies > 0)", new Object[]{branchId});
+	}
+	
 	public List<Book> getAllBooksFromBranch(Integer  branchId) throws ClassNotFoundException, SQLException{
 		BookDAO bdao = new BookDAO(conn);
 		return bdao.read("select * from tbl_book where bookId in (select bookId from tbl_book_copies where branchId = ?)", new Object[]{branchId});

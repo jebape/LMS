@@ -3,9 +3,12 @@ package com.gcit.lms.dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gcit.lms.entity.Book;
+import com.gcit.lms.entity.Branch;
 import com.gcit.lms.entity.Loan;
 
 public class LoanDAO extends BaseDAO<Loan> {
@@ -21,6 +24,11 @@ public class LoanDAO extends BaseDAO<Loan> {
 	public List<Loan> readLoansByName(String LoanName) throws ClassNotFoundException, SQLException {
 		String searchName = "%"+LoanName+"%";
 		return read("select * from tbl_book_loan where LoanName like ?", new Object[]{searchName});
+	}
+	
+	public void checkOutBook(Book selectedBook, Branch branchId, Integer cardNo) throws ClassNotFoundException, SQLException {
+			save("insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) values (?,?,?,?,?,?)",
+					new Object[] {selectedBook.getId(),branchId.getId(), cardNo, LocalDate.now(), LocalDate.now().plusDays(7), null});
 	}
 	
 	public Loan readLoanByPK(Integer loanId) throws ClassNotFoundException, SQLException {

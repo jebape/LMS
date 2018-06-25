@@ -11,6 +11,8 @@ import com.gcit.lms.dao.AuthorDAO;
 import com.gcit.lms.dao.BookDAO;
 import com.gcit.lms.dao.BorrowerDAO;
 import com.gcit.lms.dao.BranchDAO;
+import com.gcit.lms.dao.CopyDAO;
+import com.gcit.lms.dao.LoanDAO;
 import com.gcit.lms.entity.Author;
 import com.gcit.lms.entity.Book;
 import com.gcit.lms.entity.Borrower;
@@ -118,7 +120,7 @@ public class BorrowerService {
 		try {
 			conn = cUtil.getConnection();
 			BranchDAO lbdao = new BranchDAO(conn);
-			return lbdao.getAllBooksFromBranch(branchId);
+			return lbdao.getExistingBooksFromBranch(branchId);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		} finally{
@@ -127,6 +129,22 @@ public class BorrowerService {
 			}
 		}
 		return null;
+	}
+	
+	public void checkOutBook(Book selectedBook, Branch branchId, String cardNo) throws ClassNotFoundException, SQLException {
+		Connection conn = null;
+		try {
+			conn = cUtil.getConnection();
+			LoanDAO ldao = new LoanDAO(conn);
+			ldao.checkOutBook(selectedBook, branchId, Integer.parseInt(cardNo));
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (conn != null) {
+				conn.close();
+			}
+		}
 	}
 
 }
