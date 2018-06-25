@@ -191,7 +191,7 @@ public class MenuUI {
 				try {
 					List<Book> booksFromBranch;
 					List<Branch> branches = ls.getAllBranches();
-					
+
 					int i;
 					for (i = 1; i <= branches.size(); i++) {
 						System.out.print((i) + ") ");
@@ -282,49 +282,51 @@ public class MenuUI {
 
 	private static void admin() {
 		AdminService as = new AdminService();
-		System.out.println("Enter item to manage:");
+		Boolean run = true;
+		while (run) {
+			System.out.println("Enter item to manage:");
+			System.out.printf(
+					"\n 1) Book & Author\n 2) Publishers\n 3) Branches\n 4) Borrowers\n 5) Loans\n 6) Quit to previous\n");
+			selection = consoleInput.nextLine();
+			try {
+				switch (selection) {
+				case "1":
+					// Book & Author
 
-		System.out.printf(
-				"\n 1) Book & Author\n 2) Publishers\n 3) Branches\n 4) Borrowers\n 5) Loans\n 6) Quit to previous\n");
-		selection = consoleInput.nextLine();
-		try {
-			switch (selection) {
-			case "1":
-				// Book & Author
+					while (adminBA(as));
 
-				adminBA(as);
+					break;
+				case "2":
+					// Publishers
+					while (adminP(as));
+					break;
+				case "3":
+					// Branches
+					while (adminBr(as));
+					break;
+				case "4":
+					// Borrowers
+					while (adminBo(as));
+					break;
+				case "5":
+					// Loans
+					while (adminL(as));
+					break;
+				case "6":
+					// Quit
+					run = false;
+					break;
+				default:
+					System.out.println("Wrong input");
+				}
 
-				break;
-			case "2":
-				// Publishers
-				adminP(as);
-				break;
-			case "3":
-				// Branches
-				adminBr(as);
-				break;
-			case "4":
-				// Borrowers
-				adminBo(as);
-				break;
-			case "5":
-				// Loans
-				adminL(as);
-				break;
-			case "6":
-				// Quit
-				return;
-
-			default:
-				System.out.println("Wrong input");
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 
-	private static void adminBA(AdminService as) throws SQLException {
+	private static Boolean adminBA(AdminService as) throws SQLException {
 		int i;
 		List<Book> books;
 
@@ -347,7 +349,7 @@ public class MenuUI {
 				System.out.println(i + ") Quit to cancel operation");
 				selection = consoleInput.nextLine();
 				if (selection.equals(Integer.toString(i))) {
-					break;
+					return true;
 				} else {
 					Book b = new Book();
 					Author a = new Author();
@@ -364,8 +366,8 @@ public class MenuUI {
 
 				}
 			} else {
-				System.out.println("There are not books for this branch");
-				break;
+				System.out.println("There are not publishers");
+				return true;
 			}
 
 			break;
@@ -379,13 +381,13 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Integer bookId = books.get(Integer.parseInt(selection) - 1).getId();
 				System.out.println("Please enter new book title or enter ‘quit’ to cancel operation");
 				String title = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(title)) {
-					break;
+					return true;
 				}
 
 				Book editedBook = new Book();
@@ -406,7 +408,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Book book = books.get(Integer.parseInt(selection) - 1);
 				as.deleteBook(book);
@@ -424,7 +426,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Book book = books.get(Integer.parseInt(selection) - 1);
 				System.out.println("ID: " + book.getId());
@@ -435,13 +437,14 @@ public class MenuUI {
 			}
 			break;
 		case "5":
-			return;
+			return false;
 		default:
 			System.out.println("Wrong input");
 		}
+		return false;
 	}
 
-	private static void adminP(AdminService as) throws SQLException {
+	private static Boolean adminP(AdminService as) throws SQLException {
 		int i;
 		List<Publisher> publishers;
 
@@ -478,7 +481,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Publisher publisher = publishers.get(Integer.parseInt(selection) - 1);
 				System.out.println("Enter ‘quit’ at any prompt to cancel operation.");
@@ -487,7 +490,7 @@ public class MenuUI {
 				Publisher editedPubl = new Publisher();
 				editedPubl.setId(publisher.getId());
 				if ("quit".equalsIgnoreCase(name)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(name)) {
 					editedPubl.setName(publisher.getName());
 				} else {
@@ -496,7 +499,7 @@ public class MenuUI {
 				System.out.println("Please enter new publisher address or enter N/A for no change:");
 				String addr = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(addr)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(addr)) {
 					editedPubl.setAddress(publisher.getAddress());
 				} else {
@@ -505,7 +508,7 @@ public class MenuUI {
 				System.out.println("Please enter new publisher phone or enter N/A for no change:");
 				String phone = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(phone)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(phone)) {
 					editedPubl.setPhone(publisher.getPhone());
 				} else {
@@ -527,7 +530,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Publisher publisher = publishers.get(Integer.parseInt(selection) - 1);
 				as.deletePublisher(publisher);
@@ -545,7 +548,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Publisher publisher = publishers.get(Integer.parseInt(selection) - 1);
 				System.out.println("ID: " + publisher.getId());
@@ -555,14 +558,15 @@ public class MenuUI {
 			}
 			break;
 		case "5":
-			return;
+			return false;
 		default:
 			System.out.println("Wrong input");
 		}
+		return false;
 
 	}
 
-	private static void adminBr(AdminService as) throws SQLException {
+	private static Boolean adminBr(AdminService as) throws SQLException {
 		int i;
 		List<Branch> branches;
 
@@ -597,7 +601,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Branch branch = branches.get(Integer.parseInt(selection) - 1);
 				System.out.println("Enter ‘quit’ at any prompt to cancel operation.");
@@ -606,7 +610,7 @@ public class MenuUI {
 				Branch editedBr = new Branch();
 				editedBr.setId(branch.getId());
 				if ("quit".equalsIgnoreCase(name)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(name)) {
 					editedBr.setName(branch.getName());
 				} else {
@@ -615,7 +619,7 @@ public class MenuUI {
 				System.out.println("Please enter new Branch address or enter N/A for no change:");
 				String addr = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(addr)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(addr)) {
 					editedBr.setAddress(branch.getAddress());
 				} else {
@@ -637,7 +641,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Branch branch = branches.get(Integer.parseInt(selection) - 1);
 				as.deleteBranch(branch);
@@ -655,7 +659,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Branch branch = branches.get(Integer.parseInt(selection) - 1);
 				System.out.println("ID: " + branch.getId());
@@ -664,13 +668,14 @@ public class MenuUI {
 			}
 			break;
 		case "5":
-			return;
+			return false;
 		default:
 			System.out.println("Wrong input");
 		}
+		return false;
 	}
 
-	private static void adminBo(AdminService as) throws SQLException {
+	private static Boolean adminBo(AdminService as) throws SQLException {
 		int i;
 		List<Borrower> borrowers;
 
@@ -707,7 +712,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Borrower borrower = borrowers.get(Integer.parseInt(selection) - 1);
 				System.out.println("Enter ‘quit’ at any prompt to cancel operation.");
@@ -716,7 +721,7 @@ public class MenuUI {
 				Borrower editedBorrow = new Borrower();
 				editedBorrow.setId(borrower.getId());
 				if ("quit".equalsIgnoreCase(name)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(name)) {
 					editedBorrow.setName(borrower.getName());
 				} else {
@@ -725,7 +730,7 @@ public class MenuUI {
 				System.out.println("Please enter new Borrower address or enter N/A for no change:");
 				String addr = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(addr)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(addr)) {
 					editedBorrow.setAddress(borrower.getAddress());
 				} else {
@@ -734,7 +739,7 @@ public class MenuUI {
 				System.out.println("Please enter new Borrower phone or enter N/A for no change:");
 				String phone = consoleInput.nextLine();
 				if ("quit".equalsIgnoreCase(phone)) {
-					break;
+					return true;
 				} else if ("N/A".equalsIgnoreCase(phone)) {
 					editedBorrow.setPhone(borrower.getPhone());
 				} else {
@@ -756,7 +761,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Borrower publisher = borrowers.get(Integer.parseInt(selection) - 1);
 				as.deleteBorrower(publisher);
@@ -774,7 +779,7 @@ public class MenuUI {
 			System.out.println(i + ") Quit to previous");
 			selection = consoleInput.nextLine();
 			if (selection.equals(Integer.toString(i))) {
-				return;
+				return true;
 			} else {
 				Borrower publisher = borrowers.get(Integer.parseInt(selection) - 1);
 				System.out.println("ID: " + publisher.getId());
@@ -784,13 +789,15 @@ public class MenuUI {
 			}
 			break;
 		case "5":
-			return;
+			return false;
 		default:
 			System.out.println("Wrong input");
 		}
+		return false;
+
 	}
 
-	private static void adminL(AdminService as) {
+	private static Boolean adminL(AdminService as) {
 		System.out.println("Pick up Branch to find loans:");
 		List<Branch> branches = null;
 		try {
@@ -807,7 +814,7 @@ public class MenuUI {
 		System.out.println(i + ") Quit to previous");
 		selection = consoleInput.nextLine();
 		if (selection.equals(Integer.toString(i))) {
-			return;
+			return false;
 		} else {
 			Branch branchId = branches.get(Integer.parseInt(selection) - 1);
 			try {
@@ -822,7 +829,7 @@ public class MenuUI {
 					System.out.println(i + ") Quit to cancel operation");
 					selection = consoleInput.nextLine();
 					if (selection.equals(Integer.toString(i))) {
-						return;
+						return true;
 					} else {
 						Loan loan = loans.get(Integer.parseInt(selection) - 1);
 						System.out.print("Insert new Due Date [yyyy-mm-dd]: ");
@@ -833,12 +840,14 @@ public class MenuUI {
 					}
 				} else {
 					System.out.println("There are not available copies for this branch");
-					return;
+					return false;
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		return false;
+
 	}
 
 }

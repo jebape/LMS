@@ -28,7 +28,6 @@ public class LoanDAO extends BaseDAO<Loan> {
 	}
 	
 	public void updateDueDate(Book book, Branch branch, Borrower borrower, LocalDate date) throws ClassNotFoundException, SQLException {
-		System.out.println(book.getId());
 		save("update tbl_book_loans set dueDate = ? where bookId = ? and branchId = ? and cardNo = ?", new Object[] {date.toString(), book.getId(), branch.getId(), borrower.getId()});
 
 	}
