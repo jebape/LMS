@@ -140,23 +140,23 @@ public class MenuUI {
 				break;
 			case "2":
 				// return a book
-				List<Book> books = null;
+				List<Loan> loans = null;
 				try {
-					books = bs.getAllLoansFromUser(cardNo);
+					loans = bs.getAllLoansFromUser(cardNo);
 
-					if (!books.isEmpty() && books != null) {
-						for (i = 1; i <= books.size(); i++) {
+					if (!loans.isEmpty() && loans != null) {
+						for (i = 1; i <= loans.size(); i++) {
 							System.out.print((i) + ") ");
-							System.out.println(books.get(i - 1).getTitle() + " by "
-									+ books.get(i - 1).getAuthors().get(0).getName());
+							System.out.println(loans.get(i - 1).getBook().getTitle() + " by "
+									+ loans.get(i - 1).getBook().getAuthors().get(0).getName());
 						}
 						System.out.println(i + ") Quit to cancel operation");
 						selection = consoleInput.nextLine();
 						if (selection.equals(Integer.toString(i))) {
 							break;
 						} else {
-							Book selectedBook = books.get(Integer.parseInt(selection) - 1);
-							bs.checkInBook(selectedBook, cardNo);
+							Loan selectedLoan = loans.get(Integer.parseInt(selection) - 1);
+							bs.checkInBook(selectedLoan.getBook(), selectedLoan.getBranch(), cardNo);
 						}
 					} else {
 						System.out.println("You do not have checkout books at this time.");

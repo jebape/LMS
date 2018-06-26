@@ -31,8 +31,10 @@ public class LoanDAO extends BaseDAO<Loan> {
 
 	}
 	
-	public void checkInBook(Book selectedBook, Integer cardNo) throws ClassNotFoundException, SQLException {
-		save("delete from tbl_book_loans where bookId = ? and cardNo = ?", new Object[] { selectedBook.getId(), cardNo });
+	public void checkInBook(Book selectedBook, Branch branch, Integer cardNo) throws ClassNotFoundException, SQLException {
+		save("update tbl_book_loans set dateIn = ? where bookId = ? and branchId = ? and cardNo = ?", new Object[] {LocalDate.now(), selectedBook.getId(), branch.getId(), cardNo});
+
+		//save("delete from tbl_book_loans where bookId = ? and cardNo = ?", new Object[] { selectedBook.getId(), cardNo });
 	}
 
 	public void checkOutBook(Book selectedBook, Branch branchId, Integer cardNo)
@@ -80,7 +82,9 @@ public class LoanDAO extends BaseDAO<Loan> {
 	public List<Loan> getExistingLoansFromBranch(Integer branchId) throws ClassNotFoundException, SQLException {
 		return read("select * from tbl_book_loans where bookId in (select bookId from tbl_book_copies where branchId = ?)", new Object[]{branchId});
 	}
-
+	public List<Loan> getLoansBy(Integer cardNo) throws ClassNotFoundException, SQLException {
+		return read("select * from tbl_book_loans where cardNo = ? and dateIn is null", new Object[]{cardNo});
+	}
 
 	
 }

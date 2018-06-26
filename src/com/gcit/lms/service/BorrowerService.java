@@ -84,14 +84,16 @@ public class BorrowerService {
 		}
 		return null;
 	}
-	public List<Book> getAllLoansFromUser(String cardNo) throws NumberFormatException, ClassNotFoundException, SQLException{
+	public List<Loan> getAllLoansFromUser(String cardNo) throws NumberFormatException, ClassNotFoundException, SQLException{
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
 			BookDAO bdao = new BookDAO(conn);
-			List<Book> books = bdao.getBooksFrom(Integer.parseInt(cardNo));
+			LoanDAO ldao = new LoanDAO(conn);
+			//List<Book> books = bdao.getBooksFrom(Integer.parseInt(cardNo));
+			List<Loan> loans = ldao.getLoansBy(Integer.parseInt(cardNo));
 			conn.commit();
-			return books;
+			return loans;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -101,12 +103,14 @@ public class BorrowerService {
 		}
 		return null;
 	}
-	public void checkOutBook(Book selectedBook, Branch branchId, String cardNo) throws ClassNotFoundException, SQLException {
+	public void checkOutBook(Book selectedBook, Branch branch, String cardNo) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
 			LoanDAO ldao = new LoanDAO(conn);
-			ldao.checkOutBook(selectedBook, branchId, Integer.parseInt(cardNo));
+			CopyDAO cdao = new CopyDAO(conn);
+			ldao.checkOutBook(selectedBook, branch, Integer.parseInt(cardNo));
+			cdao.updateNoOfCopies(selectedBook.getId(), branch.getId(), cdao.getNumberCopies(selectedBook.getId(), branch.getId())-1);
 			conn.commit();
 
 		} catch (SQLException e) {
@@ -118,12 +122,15 @@ public class BorrowerService {
 		}
 	}
 
-	public void checkInBook(Book selectedBook, String cardNo) throws ClassNotFoundException, SQLException {
+	public void checkInBook(Book selectedBook, Branch branch, String cardNo) throws ClassNotFoundException, SQLException {
 		Connection conn = null;
 		try {
 			conn = connUtil.getConnection();
 			LoanDAO ldao = new LoanDAO(conn);
-			ldao.checkInBook(selectedBook, Integer.parseInt(cardNo));
+			CopyDAO cdao = new CopyDAO(conn);
+			ldao.checkInBook(selectedBook, branch, Integer.parseInt(cardNo));
+			cdao.updateNoOfCopies(selectedBook.getId(), branch.getId(), cdao.getNumberCopies(selectedBook.getId(), branch.getId())+1);
+
 			conn.commit();
 
 		} catch (SQLException e) {
